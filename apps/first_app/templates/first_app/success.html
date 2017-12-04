@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">    
+        <title> Pokes </title>
+        <!-- ADDED THIS TO LOAD STATIC FOLDER ITEMS -->
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'first_app/css/style.css' %}">
+    </head>
+
+    <body>
+        {% if error_message %}
+            <p><strong> {{ error_message }}</strong></p>
+        {% endif %}
+        <!-- Grab the me.user_name-->
+        <span><h3>Welcome, {{me.alias}}!</h3></span>
+        <a href="{% url 'first_app:logout' %}">Logout</a>
+        
+        <table>
+            {% if my_pokes %}
+                {% for poke in my_pokes %}
+                    <tr>    
+                        <td>{{poke.created_by.alias}} with user id of {{poke.created_by.id}} poked you!</td>
+                    </tr>
+                {% endfor %}
+                </table>            
+            {% else %}
+                </table>
+                <p>No one has poked you yet. Invite more users to the platform to poke you!</p>
+            {% endif %}
+
+            <table>
+                <th>
+                    User Id
+                </th>
+                <th>
+                    Times Poked
+                </td>
+                </th>
+                </tr>
+                {%for poke in my_pokes_grouped %}
+                <tr>
+                    <td>{{poke.created_by}}</td>
+                    <td>{{poke.total}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+            <p>People you may want to poke:</p>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Alias</th>
+                    <th>Email Address</th>
+                    <th>Poke History</th>
+                    <th>Action</th>
+                </tr>
+                {% if all_but_me %}
+                    {% for user in all_but_me %} 
+                        <tr>    
+                            <td>{{user.name}}</td>
+                            <td>{{user.alias}}</td>
+                            <td>{{user.email}}</td>   
+                            <td>{{user.receiver.all.count}}</td> 
+                            <td><button><a href="{% url 'first_app:poke' id=user.id %}">Poke</a></button></td>
+                        </tr>
+                    {% endfor %}
+                    </table>            
+                {% else %}
+                    </table>
+                    <p>There are currently no more users to poke. Invite more users to the platform to poke them!</p>
+                {% endif %}
+    </body>
+</html>
